@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taylor Series Approximation</title>
+    <style>
+        table, tr, th, td {
+            border: 2px solid black;
+            border-collapse: collapse;
+        }
+        table {
+            width: 100%;
+            display: none; /* Initially hidden */
+        }
+        td {
+            text-align: center;
+        }
+        h1, h2,h3 {
+            text-align: center;
+        }
+        input {
+            margin: 5px;
+        }
+        #result {
+            margin-top: 10px;
+        }
+        header {
+            background-color: #5f4edd;
+            color: white;
+            padding: 5px 0px 0px 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <header>
+            <h1>OE5450 - Assignment I</h1>
+        <h2>Numerical Techniques in Ocean Hydrodynamics</h2>
+        <div style="text-align: right;">
+            <span>A.Srikanth</span> | <span>OE24M008</span>
+        </div>
+        </header>
+        <h2>Taylor Series Approximation</h2>
+        <h3>f(x+Δx) ≈ f(x) + f'(x)Δx + (f''(x) / 2!)Δx² + (f³(x) / 3!)Δx³ + (f⁴(x) / 4!)Δx⁴</h3>
+        <div>
+            Enter Coefficients: 
+            <input type="number" id="x^3" required><span> x³ + </span>
+            <input type="number" id="x^2" required><span> x² + </span>
+            <input type="number" id="x" required><span> x + </span>
+            <input type="number" id="con" required>
+        </div><br>
+        <div>
+            Enter Δx values: 
+            <span>Δx₁ = </span><input type="number" id="Δx1">
+            <span>; Δx₂ = </span><input type="number" id="Δx2">
+            <span>; Δx₃ = </span><input type="number" id="Δx3">
+        </div><br>
+        <div>
+            Enter X value: 
+            <input type="number" id="X">
+            <button onclick="calculateResults()">Calculate</button>
+        </div><br>
+        <div id="result"></div><br>
+    </div>
+    <div>
+        <table id="resultsTable">
+            <tr>
+                <th style="width: 10%; height: 30px;">Δx</th>
+                <th style="width: 10%;">Value</th>
+                <th>Δx₁</th>
+                <th>Δx₂</th>
+                <th>Δx₃</th>
+            </tr>
+            <tr>
+                <th style="height: 30px;">f(x+Δx)</th>
+                <th>Exact</th>
+                <td id="eX1"></td>
+                <td id="eX2"></td>
+                <td id="eX3"></td>
+            </tr>
+            <tr>
+                <th rowspan="2">N₁</th>
+                <th style="height: 30px;">Appr</th>
+                <td id="an1x1"></td>
+                <td id="an1x2"></td>
+                <td id="an1x3"></td>
+            </tr>
+            <tr>
+                <th style="height: 30px;">TruEr</th>
+                <td id="ten1x1"></td>
+                <td id="ten1x2"></td>
+                <td id="ten1x3"></td>
+            </tr>
+            <tr>
+                <th rowspan="2">N₂</th>
+                <th style="height: 30px;">Appr</th>
+                <td id="an2x1"></td>
+                <td id="an2x2"></td>
+                <td id="an2x3"></td>
+            </tr>
+            <tr>
+                <th style="height: 30px;">TruEr</th>
+                <td id="ten2x1"></td>
+                <td id="ten2x2"></td>
+                <td id="ten2x3"></td>
+            </tr>
+            <tr>
+                <th rowspan="2">N₃</th>
+                <th style="height: 30px;">Appr</th>
+                <td id="an3x1"></td>
+                <td id="an3x2"></td>
+                <td id="an3x3"></td>
+            </tr>
+            <tr>
+                <th style="height: 30px;">TruEr</th>
+                <td id="ten3x1"></td>
+                <td id="ten3x2"></td>
+                <td id="ten3x3"></td>
+            </tr>
+            <tr>
+                <th rowspan="2">N₄</th>
+                <th style="height: 30px;">Appr</th>
+                <td id="an4x1"></td>
+                <td id="an4x2"></td>
+                <td id="an4x3"></td>
+            </tr>
+            <tr>
+                <th style="height: 30px;">TruEr</th>
+                <td id="ten4x1"></td>
+                <td id="ten4x2"></td>
+                <td id="ten4x3"></td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        function calculateResults() {
+            const a = parseFloat(document.getElementById('x^3').value);
+            const b = parseFloat(document.getElementById('x^2').value);
+            const c = parseFloat(document.getElementById('x').value);
+            const d = parseFloat(document.getElementById('con').value);
+            const dx1 = parseFloat(document.getElementById('Δx1').value);
+            const dx2 = parseFloat(document.getElementById('Δx2').value);
+            const dx3 = parseFloat(document.getElementById('Δx3').value);
+            const X = parseFloat(document.getElementById('X').value);
+
+            const fofx = (a * X ** 3) + (b * X ** 2) + (c * X) + d;
+            const yprime = (3 * a * X ** 2) + (2 * b * X) + c;
+            const ydoubleprime = (6 * a * X) + (2 * b);
+            const ytripleprime = 6 * a;
+            const yquadprime = 0; // Fourth derivative of cubic equation is 0
+
+            document.getElementById('result').innerHTML = `
+                y(x) = ${fofx} <br>
+                y'(x) = ${yprime} <br>
+                y''(x) = ${ydoubleprime} <br>
+                y'''(x) = ${ytripleprime} <br>
+                y⁴(x) = ${yquadprime}
+            `;
+
+            const dx = [dx1, dx2, dx3];
+            const results = dx.map(dxi => {
+                const exact = (a * (X + dxi) ** 3) + (b * (X + dxi) ** 2) + (c * (X + dxi)) + d;
+                const approx1 = fofx + yprime * dxi;
+                const approx2 = approx1 + (ydoubleprime * dxi ** 2) / 2;
+                const approx3 = approx2 + (ytripleprime * dxi ** 3) / 6;
+                const approx4 = approx3 + (yquadprime * dxi ** 4) / 24;
+
+                return { exact, approx1, approx2, approx3, approx4 };
+            });
+
+            results.forEach((res, i) => {
+                const ex = i + 1;
+                document.getElementById(`eX${ex}`).innerHTML = res.exact.toFixed(10);
+                document.getElementById(`an1x${ex}`).innerHTML = res.approx1.toFixed(10);
+                document.getElementById(`ten1x${ex}`).innerHTML = (res.exact - res.approx1).toFixed(10);
+                document.getElementById(`an2x${ex}`).innerHTML = res.approx2.toFixed(10);
+                document.getElementById(`ten2x${ex}`).innerHTML = (res.exact - res.approx2).toFixed(10);
+                document.getElementById(`an3x${ex}`).innerHTML = res.approx3.toFixed(10);
+                document.getElementById(`ten3x${ex}`).innerHTML = (res.exact - res.approx3).toFixed(10);
+                document.getElementById(`an4x${ex}`).innerHTML = res.approx4.toFixed(10);
+                document.getElementById(`ten4x${ex}`).innerHTML = (res.exact - res.approx4).toFixed(10);
+            });
+
+            // Show the table
+            document.getElementById('resultsTable').style.display = 'table';
+        }
+    </script>
+</body>
+</html>
